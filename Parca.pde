@@ -81,7 +81,10 @@ void setup() {
 
 void draw() {
   // zemini çiz
-  background(0);
+  // background(0);
+  // yarı saydam bir zemin kullanarak parçacıkların arkasından iz bırakmak için:
+  fill(0,10);
+  rect(0,0,EX,EY);
   
   // grid bilgileri
   strokeWeight(1);
