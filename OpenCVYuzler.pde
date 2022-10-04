@@ -1,5 +1,3 @@
-// image search adapted from: https://github.com/jeffThompson/ProcessingTeachingSketches/blob/master/AdvancedTopics/GetGoogleImageSearchURLs/GetGoogleImageSearchURLs.pde
-
 import gab.opencv.*;
 import java.awt.Rectangle;
 
@@ -13,7 +11,9 @@ OpenCV opencv;
 ArrayList<PImage> resimler = new ArrayList<PImage>();
 ArrayList<Rectangle[]> yuzler = new ArrayList<Rectangle[]>();
 
+// görsel araması için kullandığımız terimler
 String searchTerm = "portrait photo";
+
 int offset = 0;
 String fileSize = "10mp";
 String source = null;  
@@ -23,6 +23,7 @@ void setup() {
 
   getImages();
 
+  // her seferinde 20 görsel alabildiğimiz için offset'e 20 ekleyerek getImages fonksiyonunu tekrar çağrıyoruz
   offset = 20;
   getImages();
 
@@ -30,20 +31,32 @@ void setup() {
   getImages();
 }
 
+// web sayfasının kaynak kodunu elde etmek için kullandığımız fonksiyon
 void getImages() {
 
+  // web üzerinden bilgi almanın detaylarına girmedik, ayrıntılar için şu koda bakabilirsiniz:
+  // https://github.com/jeffThompson/ProcessingTeachingSketches/blob/master/AdvancedTopics/GetGoogleImageSearchURLs/GetGoogleImageSearchURLs.pde
+
+  // terimlerin arasındaki boşluk karakteri web adresinde %20 olarak değiştirilmeli
   searchTerm = searchTerm.replaceAll(" ", "%20");
+
   try {
+    // google resim araması yapmak için kullanacağımız url formatı
+    // bu google'ın belirlediği bir format, ileride değişirse ona göre güncellemek gerekir
     URL query = new URL("http://images.google.com/images?gbv=1&start=" 
       + offset + "&q=" + searchTerm + "&tbs=isz:lt,islt:" + fileSize);
+
     HttpURLConnection urlc = (HttpURLConnection) query.openConnection();
     urlc.setInstanceFollowRedirects(true);
     urlc.setRequestProperty("User-Agent", "");
     urlc.connect();
+
     BufferedReader in = new BufferedReader(new InputStreamReader(urlc.getInputStream()));
     StringBuffer response = new StringBuffer();
     char[] buffer = new char[1024];
+
     while (true) {
+
       int charsRead = in.read(buffer);
       if (charsRead == -1) {
         break;
@@ -57,6 +70,7 @@ void getImages() {
     e.printStackTrace();
   }
 
+  // kaynak kodu boş değilse
   if (source != null) {
 
     // resim linkleri için kullanacağımız başlangıç ve bitiş indeksleri
